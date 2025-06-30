@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Weather</title>
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Our styles and scripts -->
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js" defer></script>
+  </head>
+  <body>
+    <div  id="app">
+
+      <main>
+        <!-- Search Section -->
+      <section class="search-section">
+          <div class="top-bar">            
+            <div class="unit-toggle">
+              <span>°C</span>
+              <label class="switch">
+                <input type="checkbox" id="temp-toggle" />
+                <span class="slider round"></span>
+              </label>
+              <span id="display-unit">°F</span>
+            </div>
+          </div>
+
+          <form action="#" id="search-form" class="search-app">
+            <input
+              type="text"
+              name="city-input"
+              class="input"
+              placeholder="Introduce (Type) the name of the city"
+            />
+            <button class="btn">
+              <i class="fas fa-search">Search</i>
+            </button>
+            <button
+              id="get-location"
+              class="btn btn-round"
+              title="Use the current locațion"
+            >
+            </button>
+            <button
+              id="search-btn"
+              class="btn btn-round"
+              title="Search"
+            >
+              <i class="fas fa-location-arrow"></i>
+              <span>The current location</span>
+            </button>
+          </form>
+
+           <!-- Loading -->
+          <div id="loading" class="loading hidden">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <!-- Error -->
+          <div id="error" class="error hidden"></div>
+        </section>
+        <!-- Weather Displaying -->
+        <section id="weather-display" class="card weather-display">
+            <div class="city-info">
+              <h2 id="city-name"></h2>
+              <p id="date-time"></p>
+            </div>
+  
+            <div class="weather-main">
+              <div class="temperature-app">
+                <div class="temperature-main">
+                  <span id="temperature"></span>
+                  <span class="degree">&deg;</span>
+                </div>
+                <div class="feels-like">
+                  <span>It feels like: </span>
+                  <span id="feels-like"></span>
+                  <span>&deg;</span>
+                </div>
+              </div>
+  
+              <div class="weather-icon-app">
+                <img id="weather-icon" src="#" alt="Meteo Icon " />
+                <p id="description"></p>
+              </div>
+            </div>
+  
+            <div class="weather-details data-panel">
+              <div class="data-row">
+                <i class="fas fa-tint data-icon"></i>
+                <span class="data-label">Humidity</span>
+                <div class="data-value">
+                  <span id="humidity"></span>
+                  <span>%</span>
+                </div>
+              </div>
+              <div class="data-row">
+                <i class="fas fa-wind data-icon"></i>
+                <span class="data-label">Wind</span>
+                <div class="data-value">
+                  <span id="wind-speed"></span>
+                  <span> m/s</span>
+                </div>
+              </div>
+              <div class="data-row">
+                <i class="fas fa-compress-alt data-icon"></i>
+                <span class="data-label">Pressure</span>
+                <div class="data-value">
+                  <span id="pressure"></span>
+                  <span> hPa</span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="sun-times data-panel">
+              <div class="data-row">
+                <i class="fas fa-sun data-icon"></i>
+                <span class="data-label">Sunrise</span>
+                <span id="sunrise" class="data-value"></span>
+              </div>
+              <div class="data-row">
+                <i class="fas fa-moon data-icon"></i>
+                <span class="data-label">Sunset</span>
+                <span id="sunset" class="data-value"></span>
+              </div>
+            </div>
+  
+            <!-- Temperature Range Visualization -->
+            <div class="temperature-visualization">
+              <div id="temp-range" class="temp-range">
+                <div id="temp-min" class="temp-min"></div>
+                <div id="temp-indicator" class="temp-indicator">
+                  <span id="temp-current-label" class="temp-current-label"></span>
+                </div>
+                <div id="temp-max" class="temp-max"></div>
+              </div>
+            </div>
+			
+			<div class="controls">
+				<div class="control-group">
+					<label for="unit-select">Unitatea temperaturii:</label>
+					<select id="unit-select">
+				<!-- Ce opțiuni pentru unități? metric/imperial? -->
+				<!-- Ce valori pui în value? -->
+				<!-- Care este selecția default? -->
+					</select>
+				</div>
+
+				<div class="control-group">
+					<label for="lang-select">Limba descrierilor:</label>
+					<select id="lang-select">
+				<!-- Ce limbi suportă OpenWeatherMap? -->
+				<!-- ro, en, fr, de, es? -->
+				<!-- Cum afișezi numele limbilor în română? -->
+					</select>
+				</div>
+			</div>
+			
+			<div class="controls">
+				<div class="control-group">
+					<label for="unit-select">Unitatea temperaturii:</label>
+					<select id="unit-select">
+					<!-- Ce opțiuni pentru unități? metric/imperial? -->
+					<!-- Ce valori pui în value? -->
+					<!-- Care este selecția default? -->
+					</select>
+				</div>
+
+				<div class="control-group">
+					<label for="lang-select">Limba descrierilor:</label>
+					<select id="lang-select">
+					<!-- Ce limbi suportă OpenWeatherMap? -->
+					<!-- ro, en, fr, de, es? -->
+					<!-- Cum afișezi numele limbilor în română? -->
+					</select>
+				</div>
+			</div>
+			
+			<!-- Adaugă în zona de search -->
+			<div id="search-section">
+			<!-- Elementele existente -->
+
+			<!-- Istoric de căutări -->
+				<div id="history-section" class="history-section hidden">
+					<h3>Căutări recente</h3>
+					<div id="history-list" class="history-list"></div>
+					<button id="clear-history-btn" class="clear-history-btn">Șterge istoricul</button>
+					</div>
+				</div>
+
+			<!-- Adaugă și o zonă pentru log-uri (doar pentru dezvoltare) -->
+			<div id="dev-tools" class="dev-tools hidden">
+				<h4>Developer Logs</h4>
+				<div id="log-display" class="log-display"></div>
+				<button id="clear-logs-btn">Clear Logs</button>
+				<button id="export-logs-btn">Export Logs</button>
+			</div>
+
+          </section>
+      </main>
+      
+    </div>    
+     
+      <footer class="app-footer">
+        <p>
+          Dates provide by
+          <a href="https://openweathermap.org/" target="_blank"
+            >OpenWeatherMap
+          </a>
+        </p>
+      </footer>
+    
+  </body>
+</html>
