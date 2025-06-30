@@ -81,3 +81,18 @@ export const CONFIG = {
 if (this.logs.length >= CONFIG.LOGGING.MAX_LOGS) {
   this.logs.shift() // Elimină primul (cel mai vechi)
 }
+
+// În config.js - configuration pentru production
+const isDevelopment =
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+
+export const CONFIG = {
+  API_KEY: isDevelopment ? 'dev_api_key' : 'prod_api_key',
+  API_BASE_URL: '<https://api.openweathermap.org/data/2.5>',
+  // ... restul configurației
+
+  // Development helpers
+  DEBUG_MODE: isDevelopment,
+  ENABLE_CONSOLE_LOGS: isDevelopment,
+}
