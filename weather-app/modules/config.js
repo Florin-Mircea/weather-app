@@ -96,3 +96,26 @@ export const CONFIG = {
   DEBUG_MODE: isDevelopment,
   ENABLE_CONSOLE_LOGS: isDevelopment,
 }
+
+// config/environment.js
+const environments = {
+  development: {
+    API_KEY: 'your_dev_api_key',
+    DEBUG: true,
+    CACHE_TTL: 1000, // 1 second for testing
+    ENABLE_LOGGING: true,
+  },
+
+  production: {
+    API_KEY: 'your_prod_api_key',
+    DEBUG: false,
+    CACHE_TTL: 600000, // 10 minutes for production
+    ENABLE_LOGGING: false,
+  },
+}
+
+const currentEnv = window.location.hostname.includes('github.io')
+  ? 'production'
+  : 'development'
+
+export const ENV_CONFIG = environments[currentEnv];
