@@ -384,3 +384,14 @@ const getTimeAgo = (timestamp) => {
   if (hours < 24) return `${hours} ore în urmă`
   return `${days} zile în urmă`
 }
+
+// În ui-controller.js - optimizează search în timp real
+const createDebouncedSearch = (delay = 300) => {
+  let timeout
+  return (searchFn) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(searchFn, delay)
+  }
+}
+
+export const debouncedSearch = createDebouncedSearch();
