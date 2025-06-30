@@ -100,3 +100,25 @@ const getCurrentWeatherWithFallback = async (city) => {
   }
 }
 
+// În weather-service.js - cache inteligent
+class WeatherCache {
+  constructor(maxAge = 10 * 60 * 1000) {
+    // 10 minute
+    this.cache = new Map()
+    this.maxAge = maxAge
+  }
+
+  get(key) {
+    // Implementează logica de cache cu expirare
+  }
+
+  set(key, data) {
+    // Implementează storage cu timestamp
+  }
+
+  cleanup() {
+    // Curăță entries expirate
+  }
+}
+
+export const weatherCache = new WeatherCache();
