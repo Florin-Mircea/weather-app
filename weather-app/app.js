@@ -5,25 +5,25 @@
  * This file handles initialization, event listeners, and application flow.
  */
  
-import * as config from "./config.js";
-import * as api from "./modules/api.js";
-import * as ui-controller from "./modules/ui-controller.js";
-//import * as utils from "./modules/utils.js";
+import * as config from "modules/config.js";
+import * as api from "modules/api.js";
+import * as ui-controller from "modules/ui-controller.js";
+//import * as utils from "modules/utils.js";
  
  // Noi import-uri
-import { logger } from './modules/logger.js';
-import { historyService } from './modules/history-service.js';
+import { logger } from 'modules/logger.js';
+import { historyService } from 'modules/history-service.js';
 import {
   // ... import-urile existente
   renderHistory,
   showHistory,
   addHistoryEventListeners,
-} from './modules/ui-controller.js';
+} from 'modules/ui-controller.js';
 
 import { DEFAULT_UNIT, STORAGE_KEYS } from "modules/config.js";
 import { displayWeatherData } from "modules/ui-controller";
 
-import('./modules/config.js').then((config) => {
+import('modules/config.js').then((config) => {
   console.log(
     'API Key configured?',
     config.CONFIG.API_KEY !== 'bd1f520cc50722a7d64a3e20cb8cde3c'
@@ -32,7 +32,7 @@ import('./modules/config.js').then((config) => {
   console.log('Error messages ready:', Object.keys(config.ERROR_MESSAGES));
 });
 
-import('./modules/history-service.js').then(({ historyService }) => {
+import('modules/history-service.js').then(({ historyService }) => {
   // Test salvare
   const mockWeatherData = {
     name: 'Cluj-Napoca',
@@ -48,7 +48,7 @@ import('./modules/history-service.js').then(({ historyService }) => {
 });
 
 // În consolă:
-import('./modules/logger.js').then(({ logger }) => {
+import('modules/logger.js').then(({ logger }) => {
   logger.info('Test log')
   logger.warn('Test warning')
   logger.error('Test error')
@@ -79,19 +79,19 @@ const loadHistoryOnStart = () => {
 
 // Actualizează handleSearch pentru a salva în istoric
 const handleSearch = async () => {
-  const city = ui.getCityInput().trim();
+  const city = ui-controller.getCityInput().trim();
 
   logger.debug('Search initiated', { city });
 
   if (!isValidCity(city)) {
     const errorMsg = 'Numele orașului nu este valid';
-    ui.showError(errorMsg);
+    ui-controller.showError(errorMsg);
     logger.warn('Invalid city input', { city });
     return;
   }
 
   try {
-    ui.showLoading();
+    ui-controller.showLoading();
     logger.info('Fetching weather data', { city });
 
     const weatherData = await weatherService.getCurrentWeather(city);
@@ -100,8 +100,8 @@ const handleSearch = async () => {
     historyService.addLocation(weatherData);
 
     // Actualizează UI-ul
-    ui.displayWeather(weatherData);
-    ui.clearInput();
+    ui-controller.displayWeather(weatherData);
+    ui-controller.clearInput();
 
     // Reîncarcă istoricul
     const updatedHistory = historyService.getHistory();
@@ -113,10 +113,10 @@ const handleSearch = async () => {
       temp: weatherData.main.temp,
     });
   } catch (error) {
-    ui.showError('Nu am putut obține vremea. Încearcă din nou.');
+    ui-controller.showError('Nu am putut obține vremea. Încearcă din nou.');
     logger.error('Failed to fetch weather data', error);
   } finally {
-    ui.hideLoading();
+    ui-controller.hideLoading();
   }
 }
 
@@ -132,7 +132,7 @@ const handleHistoryClick = async (event) => {
   logger.info('History item clicked', { city, lat, lon });
 
   try {
-    ui.showLoading();
+    ui-controller.showLoading();
 
     // Folosește coordonatele pentru acuratețe
     const weatherData = await weatherService.getWeatherByCoords(lat, lon);
@@ -140,7 +140,7 @@ const handleHistoryClick = async (event) => {
     // Actualizează poziția în istoric (move to top)
     historyService.addLocation(weatherData);
 
-    ui.displayWeather(weatherData);
+    ui-controller.displayWeather(weatherData);
 
     // Reîncarcă istoricul
     const updatedHistory = historyService.getHistory();
@@ -148,7 +148,7 @@ const handleHistoryClick = async (event) => {
 
     logger.info('Weather loaded from history', { city });
   } catch (error) {
-    ui.showError('Nu am putut obține vremea din istoric.');
+    ui-controller.showError('Nu am putut obține vremea din istoric.');
     logger.error('Failed to load weather from history', error);
   } finally {
     ui.hideLoading();
@@ -175,7 +175,7 @@ const setupEventListeners = () => {
   if (elements.clearLogsBtn) {
     elements.clearLogsBtn.addEventListener('click', () => {
       logger.clearLogs();
-      ui.updateLogDisplay([]);
+      ui-controller.updateLogDisplay([]);
     });
   }
 
@@ -278,17 +278,17 @@ function handleUnitChange() {
 }
 
 // Ce module noi trebuie importate?
-import { getCoords } from './modules/location-service.js'
+import { getCoords } from 'modules/location-service.js'
 import {
   getCurrentWeather,
   getWeatherByCoords,
   getCurrentWeatherWithFallback,
-} from './modules/weather-service.js'
+} from 'modules/weather-service.js'
 import {
   saveUserPreferences,
   loadUserPreferences,
   updateTemperatureDisplay,
-} from './modules/ui-controller.js';
+} from 'modules/ui-controller.js';
 
 const handleLocationSearch = async () => {
   try {
@@ -346,12 +346,12 @@ elements.langSelect.addEventListener('change', async (e) => {
 // Testează fără internet
 // Testează cu orașe invalide
 
-import('./modules/config.js').then((config) => {
+import('modules/config.js').then((config) => {
   console.log('Config updated:', config.CONFIG);
   console.log('Max history:', config.CONFIG.MAX_HISTORY_ITEMS);
 })
 
-import('./modules/logger.js').then(({ logger }) => {
+import('modules/logger.js').then(({ logger }) => {
   logger.info('Logger test started');
   logger.debug('Debug message', { test: true });
   logger.warn('Warning message');
