@@ -65,10 +65,13 @@ const makeRequest = async (url) => {
     return await response.json();
   } catch (error) {
     // Cum distingi între network error și API error?
+    if(error.message === 'Failed to fetch')  {
+      throw new Error(ERROR_MESSAGE.NETWORK_ERROR);
+    }
     // Ce mesaj afișezi utilizatorului?
     throw new Error(/* mesaj adaptat tipului de eroare */);
   }
-}
+};
 
 // Testează că URL-ul se construiește corect
 const testUrl = buildUrl('/weather-service', { q: 'Brasov' });
