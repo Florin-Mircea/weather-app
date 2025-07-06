@@ -83,6 +83,34 @@ import { getElements,
 
 import { CONFIG } from 'modules/config.js';
 
+import('modules/config.js').then((config) => {
+  console.log('Config updated:', config.CONFIG);
+  console.log('Max history:', config.CONFIG.MAX_HISTORY_ITEMS);
+});
+
+import('modules/logger.js').then(({ logger }) => {
+  logger.info('Logger test started');
+  logger.debug('Debug message', { test: true });
+  logger.warn('Warning message');
+  logger.error('Error message', new Error('Test error'));
+
+  console.log('All logs:', logger.getLogs());
+});
+
+import('modules/config.js').then((config) => {
+  console.log('Config updated:', config.CONFIG);
+  console.log('Max history:', config.CONFIG.MAX_HISTORY_ITEMS);
+});
+
+import('modules/logger.js').then(({ logger }) => {
+  logger.info('Logger test started');
+  logger.debug('Debug message', { test: true });
+  logger.warn('Warning message');
+  logger.error('Error message', new Error('Test error'));
+
+  console.log('All logs:', logger.getLogs());
+});
+
 const elements = getElements();
 
 // Actualizează funcția de inițializare
@@ -304,8 +332,6 @@ function handleUnitChange() {
   
 }
 
-
-
 const handleLocationSearch = async () => {
   try {
     // Cum folosești noul location service?
@@ -326,7 +352,7 @@ const handleLocationSearch = async () => {
     // Cum gestionezi când nici un serviciu de locație nu funcționează?
     showError(elements, `Locația nu a putut fi determinată: ${error.message}`);
   }
-}
+};
 
 // Cum gestionezi schimbările de preferințe?
 elements.unitSelect.addEventListener('change', async (e) => {
@@ -347,6 +373,21 @@ elements.langSelect.addEventListener('change', async (e) => {
   // Logică similară pentru limbă
 });
 
+const init  = () => {
+	const prefs = loadUserPreferences();
+	CONFIG.DEFAULT_UNITS = prefs.unit;
+	CONFIG.DEFAULT_LANG = prefs.lang;
+	elements.unitSelect.value = prefs.unit;
+	elements.langSelect.value = prefs.lang;
+
+	elements.searchBtn.addEventListener('click', handleSearch);
+	elements.locationBtn.addEventListener('click', handleLocationSearch);
+	elements.unitSelect.addEventListener('change', handlePreferencesChange);
+	elements.langSelect.addEventListener('change', handlePreferencesChange);
+};
+
+init();
+
 // Testează că datele reale se încarcă
 // Testează că erorile sunt gestionate elegant
 
@@ -362,19 +403,7 @@ elements.langSelect.addEventListener('change', async (e) => {
 // Testează fără internet
 // Testează cu orașe invalide
 
-import('modules/config.js').then((config) => {
-  console.log('Config updated:', config.CONFIG);
-  console.log('Max history:', config.CONFIG.MAX_HISTORY_ITEMS);
-})
 
-import('modules/logger.js').then(({ logger }) => {
-  logger.info('Logger test started');
-  logger.debug('Debug message', { test: true });
-  logger.warn('Warning message');
-  logger.error('Error message', new Error('Test error'));
-
-  console.log('All logs:', logger.getLogs());
-})
 
 // Verifică ce e stocat:
 console.log('History:', localStorage.getItem('weather_search_history'));
