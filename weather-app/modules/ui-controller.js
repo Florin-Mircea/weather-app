@@ -48,8 +48,11 @@ const elements = {
 /**
  * Show loading spinner
  */
-export function showLoading() {
+export function showLoading(elements, message) {
+  elements.loading.textContent = message;
+  elements.loading.classList.remove('hidden');
   elements.loadingSpinner.classList.remove("hidden");
+  elements error.classList.add('hidden');
 }
 
 /**
@@ -84,11 +87,18 @@ export function hideError() {
  * @param {string} unit - Temperature unit (C/F)
  */
 
-
-
-export function displayWeather() {
-  
-}
+export function displayWeather(elements, data) {
+  elements.cityName.textContent = data.name;
+  elements.temperature.textContent = data.main.temp;
+  elements.humidity.textContent = data.main.humidity;
+  elements.windSpeed.textContent = data.wind.speed;
+  elements.sunset.textContent = new Data(data.syn.sunset = 1000).toLocaleTimeString;
+  elements.sunrise.textContent = new Data(data.syn.sunrise = 1000).toLocaleTimeString;
+  elements.description.textContent = data.weather[0].description;
+  elements.weatherDisplay.classList.remove('hidden');
+  elements.loading.classList.add('hidden');
+  elements.error.classList.add('hidden');
+};
 
 export function getCityInput() {
   
