@@ -8,17 +8,19 @@
 import * as config from "modules/config.js";
 import * as api from "modules/api.js";
 import * as ui-controller from "modules/ui-controller.js";
-//import * as utils from "modules/utils.js";
- 
- // Noi import-uri
-import { logger } from 'modules/logger.js';
-import { historyService } from 'modules/history-service.js';
+import * as utils from "modules/utils.js";
+import { getCoords } from "modules/location-service.js";
+
+ // New imports
+
+import { logger } from "modules/logger.js";
+import { historyService } from "modules/history-service.js";
 import {
   // ... import-urile existente
   renderHistory,
   showHistory,
   addHistoryEventListeners,
-} from 'modules/ui-controller.js';
+} from "modules/ui-controller.js";
 
 import { DEFAULT_UNIT, STORAGE_KEYS } from "modules/config.js";
 import { displayWeatherData } from "modules/ui-controller";
@@ -31,6 +33,22 @@ import('modules/config.js').then((config) => {
   console.log('Endpoints available:', Object.keys(config.API_ENDPOINTS));
   console.log('Error messages ready:', Object.keys(config.ERROR_MESSAGES));
 });
+import { getCurrentWeatherWithFallback,
+       	 getWeatherByCoords,
+       } from "modules/weather-service.js";
+
+// Ce module noi trebuie importate?
+import { getCoords } from 'modules/location-service.js'
+import {
+  getCurrentWeather,
+  getWeatherByCoords,
+  getCurrentWeatherWithFallback,
+} from 'modules/weather-service.js'
+import {
+  saveUserPreferences,
+  loadUserPreferences,
+  updateTemperatureDisplay,
+} from 'modules/ui-controller.js';
 
 import('modules/history-service.js').then(({ historyService }) => {
   // Test salvare
@@ -55,7 +73,17 @@ import('modules/logger.js').then(({ logger }) => {
   console.log('All logs:', logger.getLogs())
 });
 
+import { getElements,
+       	 showLoading,
+       	 showError,
+       	 displayWeather,
+       	 saveUserPreferences,
+       	 loadUserPreferences,
+       } from 'modules/ui-controller.js';
 
+import { CONFIG } from 'modules/config.js';
+
+const elements = getElements();
 
 // Actualizează funcția de inițializare
 const initializeApp = async () => {
@@ -272,23 +300,11 @@ function handleUnitChange() {
   units = elements.tempToggle.checked ? "imperial" : "metric";  
   localStorage.setItem(config.STORAGE_KEYS.TEMPERATURE_UNIT, units);
   displayInitialWeather();
-  // ✅ Save new units value to the localStorage
-  
+  // ✅ Save new units value to the localStorage  
   
 }
 
-// Ce module noi trebuie importate?
-import { getCoords } from 'modules/location-service.js'
-import {
-  getCurrentWeather,
-  getWeatherByCoords,
-  getCurrentWeatherWithFallback,
-} from 'modules/weather-service.js'
-import {
-  saveUserPreferences,
-  loadUserPreferences,
-  updateTemperatureDisplay,
-} from 'modules/ui-controller.js';
+
 
 const handleLocationSearch = async () => {
   try {
