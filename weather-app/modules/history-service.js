@@ -1,71 +1,79 @@
-// Fiecare intrare din istoric va avea:
-{
-  city: "Cluj-Napoca",
-  country: "RO",
-  timestamp: 1640995200000,
-  coordinates: { lat: 46.77, lon: 23.6 }
-}
+import { CONFIG } from './config.js'
+import { logger } from './logger.js'
 
 export class HistoryService {
   constructor() {
-    this.storageKey = CONFIG.STORAGE_KEYS.SEARCH_HISTORY;
-    this.maxItems = CONFIG.MAX_HISTORY_ITEMS;
+    this.storageKey = CONFIG.STORAGE_KEYS.SEARCH_HISTORY
+    this.maxItems = CONFIG.MAX_HISTORY_ITEMS
+
+    logger.debug('HistoryService initialized', {
+      storageKey: this.storageKey,
+      maxItems: this.maxItems,
+    })
   }
 
   addLocation(weatherData) {
-    // Extrage informațiile relevante din weatherData
-    // Verifică dacă locația există deja (evită duplicate)
-    // Dacă există, mută-o în top
-    // Dacă nu, adaugă-o la început
-    // Limitează la maxItems
-    // Salvează în localStorage
-    // Loghează acțiunea
+    const locationData = {
+      city: weatherData.name,
+      country: weatherData.sys.country,
+      timestamp: Date.now(),
+      coordinates: {
+        lat: weatherData.coord.lat,
+        lon: weatherData.coord.lon,
+      },
+    }
+
+    let history = this.getHistory()
+
+    // Check if location already exists
+    const existingIndex = history.findIndex(
+      (item) => item.city.toLowerCase() === locationData.city.toLowerCase()
+    )
+
+    if (existingIndex !== -1) {
+      // Move to top
+      history.splice(existingIndex, 1)
+    }
+
+    // Add to beginning
+    history.unshift(locationData)
+
+    // Limit to max items
+    if (history.length > this.maxItems) {
+      history = history.slice(0, this.maxItems)
+    }
+
+    // Save to localStorage
+    this._saveToStorage(history)
+    logger.info('Location added to history', locationData.city)
+
+    return history
   }
 
   getHistory() {
-    // Citește din localStorage
-    // Returnează array-ul sau array gol dacă nu există
-  }
-
-  removeLocation(city) {
-    // Elimină o locație specifică din istoric
-    // Salvează în localStorage
+    try {
+      const stored = localStorage.getItem(this.storageKey)
+      return stored ? JSON.parse(stored) : []
+    } catch (error) {
+      logger.error('Failed to load history', error)
+      return []
+    }
   }
 
   clearHistory() {
-    // Șterge tot istoricul
-    // Salvează în localStorage
+    localStorage.removeItem(this.storageKey)
+    logger.info('History cleared')
+    return []
   }
 
   _saveToStorage(history) {
-    // Salvează array-ul în localStorage
-    // Gestionează erorile (storage quota exceeded)
-  }
-
-  _loadFromStorage() {
-    // Încarcă din localStorage
-    // Gestionează erorile (invalid JSON, etc.)
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(history))
+    } catch (error) {
+      logger.error('Failed to save history', error)
+    }
   }
 }
 
+// Export singleton instance
 export const historyService = new HistoryService();
-
-const existingIndex = history.findIndex(
-  (item) => item.city.toLowerCase() === city.toLowerCase();
-);
-
-if (existingIndex !== -1) {
-  // Mută în top
-  const [existing] = history.splice(existingIndex, 1);
-  history.unshift(existing);
-} else {
-  // Adaugă nou
-  history.unshift(newLocation);
-}
-
-try {
-  localStorage.setItem(key, JSON.stringify(data));
-} catch (error) {
-  logger.error('Failed to save to localStorage', error);
-}
-
