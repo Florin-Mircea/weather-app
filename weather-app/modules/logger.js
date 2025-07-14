@@ -106,3 +106,11 @@ window.logs = {
   show: () => logger.show(),
   clear: () => logger.clear(),
 }
+
+// În consolă:
+window.logs.show() // Afișează toate log-urile cu culori
+window.logs.clear() // Șterge log-urile stocate
+
+// În cod:
+logger.info('User searched for city', { city: 'Cluj' })
+logger.error('API failed', new Error('Network error'));
